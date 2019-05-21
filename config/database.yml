@@ -1,0 +1,118 @@
+# PostgreSQL. Versions 8.2 and up are supported.
+#
+# Install the pg driver:
+#   gem install pg
+# On OS X with Homebrew:
+#   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
+# On OS X with MacPorts:
+#   gem install pg -- --with-pg-config=/opt/local/lib/postgresql84/bin/pg_config
+# On Windows:
+#   gem install pg
+#       Choose the win32 build.
+#       Install PostgreSQL and put its /bin directory on your path.
+#
+# Configure Using Gemfile
+# gem 'pg'
+#
+
+# As with config/secrets.yml, you never want to store sensitive information,
+# like your database password, in your source code. If your source code is
+# ever seen by anyone, they now have access to your database.
+#
+# Instead, provide the password as a unix environment variable when you boot
+# the app. Read http://guides.rubyonrails.org/configuring.html#configuring-a-database
+# for a full rundown on how to provide these environment variables in a
+# production deployment.
+#
+# On Heroku and other platform providers, you may have a full connection URL
+# available as an environment variable. For example:
+#
+#   DATABASE_URL="postgres://myuser:mypass@localhost/somedatabase"
+#
+# On Docker based environment URL contains only hostname and port:
+#    POSTGRES_PORT=tcp://172.17.0.4:5432
+
+# TODO: add support for both Heroku and Docker schemas:
+# https://www.google.fr/search?q=ruby+uri+database_url
+# https://gist.github.com/gullitmiranda/62082f2e47c364ef9617
+# https://gist.github.com/jakeonrails/2767211
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: hinge_dev_db
+  port: <%= ENV['DOCKER_POSTGRES_PORT'] || 5432 %>
+  pool: 5
+  username: hinge_dev
+  password: hinge_password
+  host: localhost
+
+test: &test
+  adapter: postgresql
+  encoding: unicode
+  database: hinge_test_db
+  port: <%= ENV['DOCKER_POSTGRES_PORT'] || 5432 %>
+  pool: 5
+  username: hinge_dev
+  password: hinge_password
+  host: localhost
+
+production:
+  adapter: postgresql
+  url: <%= ENV['DATABASE_URL'] %>
+  encoding: unicode
+  pool: 50
+
+production_usa:
+  adapter: postgresql
+  url: <%= ENV['DATABASE_URL'] %>
+  encoding: unicode
+  pool: 50
+
+aptible:
+  adapter: postgresql
+  encoding: unicode
+  database: <%= ENV['APTIBLE_TUNNEL_DB'] || 'db' %>
+  port: <%= ENV['APTIBLE_TUNNEL_PORT'] %>
+  pool: 5
+  username: <%= ENV['APTIBLE_TUNNEL_USERNAME'] || 'aptible' %>
+  password: <%= ENV['APTIBLE_TUNNEL_PW'] %>
+  host: <%= ENV['APTIBLE_TUNNEL_HOST'] %>
+
+staging:
+  adapter: postgresql
+  url: <%= ENV['DATABASE_URL'] %>
+  pool: 50
+
+qa:
+  adapter: postgresql
+  url: <%= ENV['DATABASE_URL'] %>
+  encoding: unicode
+  pool: 25
+
+  # The specified database role being used to connect to postgres.
+  # To create additional roles in postgres see `$ createuser --help`.
+  # When left blank, postgres will use the default role. This is
+  # the same name as the operating system user that initialized the database.
+  #username: hinge_on_rails
+
+  # The password associated with the postgres role (username).
+  #password:
+
+  # Connect on a TCP socket. Omitted by default since the client uses a
+  # domain socket that doesn't need configuration. Windows does not have
+  # domain sockets, so uncomment these lines.
+  #host: localhost
+
+  # The TCP port the server listens on. Defaults to 5432.
+  # If your server runs on a different port number, change accordingly.
+  #port: 5432
+
+  # Schema search path. The server defaults to $user,public
+  #schema_search_path: myapp,sharedapp,public
+
+  # Minimum log levels, in increasing order:
+  #   debug5, debug4, debug3, debug2, debug1,
+  #   log, notice, warning, error, fatal, and panic
+  # Defaults to warning.
+  #min_messages: notice
